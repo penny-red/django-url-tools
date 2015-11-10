@@ -10,6 +10,7 @@ except ImportError:  # django 1.4.2
     from django.http import QueryDict
 
 from django.utils.encoding import iri_to_uri
+from django.utils.encoding import smart_bytes
 
 
 class UrlHelper(object):
@@ -22,7 +23,7 @@ class UrlHelper(object):
         r = urlparse.urlparse(full_path)
         self.path = r.path
         self.fragment = r.fragment
-        self.query_dict = QueryDict(r.query, mutable=True)
+        self.query_dict = QueryDict(smart_bytes(r.query), mutable=True)
 
     def get_query_string(self, **kwargs):
         return self.query_dict.urlencode(**kwargs)
@@ -101,10 +102,10 @@ class UrlHelper(object):
     @query.setter
     def query(self, value):
         if type(value) is dict:
-            self.query_dict = QueryDict('', mutable=True)
+            self.query_dict = QueryDict(b'', mutable=True)
             self.update_query_data(**value)
         else:
-            self.query_dict = QueryDict(value, mutable=True)
+            self.query_dict = QueryDict(smart_bytes(value), mutable=True)
 
     @property
     def query_string(self):
@@ -112,7 +113,7 @@ class UrlHelper(object):
 
     @query_string.setter
     def query_string(self, value):
-        self.query_dict = QueryDict(value, mutable=True)
+        self.query_dict = QueryDict(smart_bytes(value), mutable=True)
 
     def __str__(self):
         return self.get_full_path()
