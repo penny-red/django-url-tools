@@ -1,7 +1,10 @@
 from __future__ import absolute_import, unicode_literals
 
 import urllib
-import urlparse
+try:
+    import urlparse
+except ImportError:
+    import urllib.parse as urlparse
 import hashlib
 
 try:
